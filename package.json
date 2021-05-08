@@ -1,0 +1,23 @@
+{
+  "name": "js-screensaver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/icelandico/js-screensaver.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/icelandico/js-screensaver/issues"
+  },
+  "homepage": "https://github.com/icelandico/js-screensaver#readme",
+  "devDependencies": {
+    "typescript": "^4.2.4"
+  }
+}
