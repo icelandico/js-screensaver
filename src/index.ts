@@ -1,26 +1,51 @@
 import { BaseConfig } from "./models";
 import './index.css';
 
-const baseConfig = {
+const baseConfig: BaseConfig = {
     text: 'ScreenSaver',
-    style: {
-        background: '#2c3e50',
-        color: '#2980b9',
-    },
-    baseElement: 'body'
+    background: '#2c3e50',
+    textColor: '#dbdbdb',
+    baseElement: document.body
 }
 
 class ScreenSvr {
+    private config = baseConfig;
 
-    start(config: BaseConfig = baseConfig) {
-        console.log('new screensaver')
-        this.createMarkup()
+    constructor() {
     }
 
-    private createMarkup(): void {
+    start(config?: BaseConfig): void {
+        this.config = { ...baseConfig, ...config };
+        this.createContainer();
+    }
+
+    private createContainer(): void {
         const screenSaverElem = document.createElement('div');
-        screenSaverElem.classList.add('js-screensaver-bg');
-        document.body.appendChild(screenSaverElem);
+        const screenSaverText = document.createElement('p');
+
+        screenSaverText.innerText = <string>this.config.text
+        screenSaverText.style.color = <string>this.config.textColor
+
+        screenSaverElem.classList.add('screensaver__bg');
+        screenSaverText.classList.add('screensaver__text');
+
+        this.config.baseElement?.appendChild(screenSaverElem);
+        screenSaverElem.style.backgroundColor = <string>this.config.background;
+        screenSaverElem.appendChild(screenSaverText);
+
+        this.animateText();
+    }
+
+    animateText(): void {
+      const screensaverText = <HTMLElement>document.querySelector(".screensaver__text");
+      let topPosition = 0;
+      let leftPosition = 0;
+        setInterval(() => {
+          topPosition++
+          leftPosition++
+          screensaverText.style.top = topPosition + 'px' ;
+          screensaverText.style.left = leftPosition + 'px';
+        }, 500)
     }
 }
 
