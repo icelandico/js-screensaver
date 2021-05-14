@@ -5,7 +5,9 @@ const baseConfig: BaseConfig = {
     text: 'ScreenSaver',
     background: '#2c3e50',
     textColor: '#dbdbdb',
-    baseElement: document.body
+    textSize: 20,
+    baseElement: document.body,
+    animationSpeed: 'regular',
 }
 
 class ScreenSvr {
@@ -34,18 +36,41 @@ class ScreenSvr {
         screenSaverElem.appendChild(screenSaverText);
 
         this.animateText();
+        this.checkBoundaries();
     }
 
     animateText(): void {
       const screensaverText = <HTMLElement>document.querySelector(".screensaver__text");
-      let topPosition = 0;
-      let leftPosition = 0;
-        setInterval(() => {
-          topPosition++
-          leftPosition++
-          screensaverText.style.top = topPosition + 'px' ;
-          screensaverText.style.left = leftPosition + 'px';
-        }, 500)
+      const screensaverBg = <HTMLElement>document.querySelector(".screensaver__bg");
+      const dimensions = {
+        width: screensaverBg.getBoundingClientRect().width,
+        height: screensaverBg.getBoundingClientRect().height,
+      };
+      let positionY = 0;
+      let positionX = 0;
+      let movementY = 3;
+      let movementX = 3;
+      const moveIt = (timestamp: number) => {
+        positionY += movementY
+        positionX += movementX
+
+        if (positionY <= -16 || positionY >= dimensions.height - 32) {
+          movementY = -movementY;
+        }
+        if (positionX <= 0 || positionX >= dimensions.width - 32) {
+          movementX = -movementX;
+        }
+
+        screensaverText.style.top = positionY + 'px';
+        screensaverText.style.left = positionX + 'px';
+
+        requestAnimationFrame(moveIt)
+      }
+    }
+
+    checkBoundaries(): void {
+      const backgroundElement = <HTMLElement>document.querySelector(".screensaver__bg");
+      console.log(backgroundElement.getBoundingClientRect())
     }
 }
 
