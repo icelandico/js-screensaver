@@ -27,21 +27,16 @@ class ScreenSvr {
     }
 
     private createContainer(): void {
-        const screenSaverElem = document.createElement('div');
-        const screenSaverText = document.createElement('p');
+        const screenSaverContainer = document.createElement('div');
 
-        screenSaverText.innerText = <string>this.config.text;
-        screenSaverText.style.color = <string>this.config.textColor;
-        screenSaverText.style.fontSize = `${this.config.textSize}px`;
+        screenSaverContainer.classList.add('screensaver__bg');
 
-        screenSaverElem.classList.add('screensaver__bg');
-        screenSaverText.classList.add('screensaver__container');
-
-        this.config.baseElement?.appendChild(screenSaverElem);
-        screenSaverElem.style.backgroundColor = <string>this.config.background;
+        this.config.baseElement?.appendChild(screenSaverContainer);
+        screenSaverContainer.style.backgroundColor = <string>this.config.background;
 
         const screenSaverElement = this.getScreensaverElement() as HTMLElement;
-        screenSaverElem.appendChild(screenSaverElement);
+        console.log('element', screenSaverElement)
+        screenSaverContainer.appendChild(screenSaverElement);
 
         this.runAnimation(screenSaverElement);
     }
@@ -86,9 +81,19 @@ class ScreenSvr {
 
     getScreensaverElement() {
       if (!this.config.customHTML) {
-        return <HTMLElement>document.querySelector(".screensaver__container")
+        return this.createScreensaverBaseElement();
       }
       return typeof this.config.customHTML === 'string' ? this.createElementFromText(this.config.customHTML) :  this.config.customHTML
+    }
+
+    createScreensaverBaseElement(): Element {
+      const screenSaverText = document.createElement('p');
+      screenSaverText.innerText = <string>this.config.text;
+      screenSaverText.style.color = <string>this.config.textColor;
+      screenSaverText.style.fontSize = `${this.config.textSize}px`;
+      screenSaverText.classList.add('screensaver__content');
+
+      return screenSaverText
     }
 
 }
