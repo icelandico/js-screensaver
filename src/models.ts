@@ -6,5 +6,5 @@ export interface BaseConfig {
   baseElement?: HTMLElement | Element
   backgroundImg?: string
   animationSpeed?: 'slow' | 'regular' | 'fast'
-  customHTML?: HTMLElement
+  customHTML?: Element | string
 }

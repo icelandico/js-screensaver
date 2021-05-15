@@ -35,19 +35,19 @@ class ScreenSvr {
         screenSaverText.style.fontSize = `${this.config.textSize}px`;
 
         screenSaverElem.classList.add('screensaver__bg');
-        screenSaverText.classList.add('screensaver__text');
+        screenSaverText.classList.add('screensaver__container');
 
         this.config.baseElement?.appendChild(screenSaverElem);
         screenSaverElem.style.backgroundColor = <string>this.config.background;
-        screenSaverElem.appendChild(this.config.customHTML || screenSaverText);
 
-        this.runAnimation();
+        const screenSaverElement = this.getScreensaverElement() as HTMLElement;
+        screenSaverElem.appendChild(screenSaverElement);
+
+        this.runAnimation(screenSaverElement);
     }
 
-    runAnimation(): void {
-      const screensaverElement = this.config.customHTML ? this.config.customHTML : <HTMLElement>document.querySelector(".screensaver__text");
-      screensaverElement.style.position = 'absolute';
-
+    runAnimation(element: HTMLElement): void {
+      element.style.position = 'absolute';
       const screensaverBg = <HTMLElement>document.querySelector(".screensaver__bg");
       const dimensions = {
         width: screensaverBg.getBoundingClientRect().width,
@@ -57,23 +57,38 @@ class ScreenSvr {
       let positionX = dimensions.height / 2;
       let movementX = this.config.animationSpeed ? speedOptions[this.config.animationSpeed] : 3;
       let movementY = this.config.animationSpeed ? speedOptions[this.config.animationSpeed] : 3;
+
       const animateElements = () => {
         positionY += movementY
         positionX += movementX
 
-        if (positionY < 0 || positionY >= dimensions.height - screensaverElement.offsetHeight) {
+        if (positionY < 0 || positionY >= dimensions.height - element.offsetHeight) {
           movementY = -movementY;
         }
-        if (positionX <= 0 || positionX >= dimensions.width - screensaverElement.clientWidth) {
+        if (positionX <= 0 || positionX >= dimensions.width - element.clientWidth) {
           movementX = -movementX;
         }
 
-        screensaverElement.style.top = positionY + 'px';
-        screensaverElement.style.left = positionX + 'px';
+        element.style.top = positionY + 'px';
+        element.style.left = positionX + 'px';
 
         requestAnimationFrame(animateElements)
       }
       requestAnimationFrame(animateElements)
+    }
+
+    createElementFromText(stringHtml: string): HTMLElement {
+      const element = document.createElement('div');
+      element.innerHTML = stringHtml.trim();
+
+      return element.firstChild as HTMLElement
+    }
+
+    getScreensaverElement() {
+      if (!this.config.customHTML) {
+        return <HTMLElement>document.querySelector(".screensaver__container")
+      }
+      return typeof this.config.customHTML === 'string' ? this.createElementFromText(this.config.customHTML) :  this.config.customHTML
     }
 
 }

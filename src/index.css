@@ -6,7 +6,7 @@
   left: 0;
 }
 
-.screensaver__text {
+.screensaver__container {
   display: inline-block;
   position: absolute;
   top: 0;
