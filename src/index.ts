@@ -10,6 +10,12 @@ const baseConfig: BaseConfig = {
     animationSpeed: 'regular',
 }
 
+const speedOptions = {
+  slow: 1,
+  regular: 3,
+  fast: 5,
+}
+
 class ScreenSvr {
     private config = baseConfig;
 
@@ -46,15 +52,15 @@ class ScreenSvr {
         width: screensaverBg.getBoundingClientRect().width,
         height: screensaverBg.getBoundingClientRect().height,
       };
-      let positionY = 0;
-      let positionX = 0;
-      let movementY = 3;
-      let movementX = 3;
+      let positionY = dimensions.width / 2;
+      let positionX = dimensions.height / 2;
+      let movementX = this.config.animationSpeed ? speedOptions[this.config.animationSpeed] : 3;
+      let movementY = this.config.animationSpeed ? speedOptions[this.config.animationSpeed] : 3;
       const animateElements = () => {
         positionY += movementY
         positionX += movementX
 
-        if (positionY < 0 || positionY >= dimensions.height - (screensaverText.offsetHeight * 2)) {
+        if (positionY < 0 || positionY >= dimensions.height - screensaverText.offsetHeight) {
           movementY = -movementY;
         }
         if (positionX <= 0 || positionX >= dimensions.width - screensaverText.clientWidth) {

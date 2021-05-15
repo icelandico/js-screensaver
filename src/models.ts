@@ -5,5 +5,5 @@ export interface BaseConfig {
   textSize?: number
   baseElement?: HTMLElement | Element
   backgroundImg?: string
-  animationSpeed?: string
+  animationSpeed?: 'slow' | 'regular' | 'fast'
 }
