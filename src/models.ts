@@ -4,6 +4,6 @@ export interface BaseConfig {
   textColor?: string
   textSize?: number
   baseElement?: HTMLElement | Element
-  backgroundImg?: string,
+  backgroundImg?: string
   animationSpeed?: string
 }
