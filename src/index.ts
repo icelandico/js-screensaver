@@ -19,8 +19,7 @@ const speedOptions = {
 class ScreenSvr {
     private config = baseConfig;
 
-    constructor() {
-    }
+    constructor() { }
 
     start(config?: BaseConfig): void {
         this.config = { ...baseConfig, ...config };
@@ -40,13 +39,15 @@ class ScreenSvr {
 
         this.config.baseElement?.appendChild(screenSaverElem);
         screenSaverElem.style.backgroundColor = <string>this.config.background;
-        screenSaverElem.appendChild(screenSaverText);
+        screenSaverElem.appendChild(this.config.customHTML || screenSaverText);
 
         this.runAnimation();
     }
 
     runAnimation(): void {
-      const screensaverText = <HTMLElement>document.querySelector(".screensaver__text");
+      const screensaverElement = this.config.customHTML ? this.config.customHTML : <HTMLElement>document.querySelector(".screensaver__text");
+      screensaverElement.style.position = 'absolute';
+
       const screensaverBg = <HTMLElement>document.querySelector(".screensaver__bg");
       const dimensions = {
         width: screensaverBg.getBoundingClientRect().width,
@@ -60,15 +61,15 @@ class ScreenSvr {
         positionY += movementY
         positionX += movementX
 
-        if (positionY < 0 || positionY >= dimensions.height - screensaverText.offsetHeight) {
+        if (positionY < 0 || positionY >= dimensions.height - screensaverElement.offsetHeight) {
           movementY = -movementY;
         }
-        if (positionX <= 0 || positionX >= dimensions.width - screensaverText.clientWidth) {
+        if (positionX <= 0 || positionX >= dimensions.width - screensaverElement.clientWidth) {
           movementX = -movementX;
         }
 
-        screensaverText.style.top = positionY + 'px';
-        screensaverText.style.left = positionX + 'px';
+        screensaverElement.style.top = positionY + 'px';
+        screensaverElement.style.left = positionX + 'px';
 
         requestAnimationFrame(animateElements)
       }
