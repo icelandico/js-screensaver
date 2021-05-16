@@ -18,18 +18,21 @@ const speedOptions = {
 
 class ScreenSvr {
     private config = baseConfig;
-    private windowDimensions: IDimensions = { width: 0, height: 0}
+    private windowDimensions: IDimensions = { width: 0, height: 0};
+    private playAnimation: boolean = true;
+    private screensaverElement: HTMLElement = document.body;
 
     constructor() { }
 
     start(config?: BaseConfig): void {
         this.config = { ...baseConfig, ...config };
         this.createContainer();
+        this.stopScreensaver();
     }
 
     private createContainer(): void {
         const screenSaverContainer = document.createElement('div');
-        screenSaverContainer.classList.add('screensaver__bg');
+        screenSaverContainer.classList.add('screensaver__container');
         this.config.baseElement?.appendChild(screenSaverContainer);
         this.getWindowDimensions();
 
@@ -37,19 +40,19 @@ class ScreenSvr {
 
         const screenSaverElement = this.getScreensaverElement() as HTMLElement;
         screenSaverContainer.appendChild(screenSaverElement);
-
+        this.screensaverElement = screenSaverContainer;
         this.runAnimation(screenSaverElement);
     }
 
     private getWindowDimensions(): void {
-      const screensaverBg = <HTMLElement>document.querySelector(".screensaver__bg");
+      const screensaverContainer = <HTMLElement>document.querySelector(".screensaver__container");
       this.windowDimensions = {
-        width: screensaverBg.getBoundingClientRect().width,
-        height: screensaverBg.getBoundingClientRect().height,
+        width: screensaverContainer.getBoundingClientRect().width,
+        height: screensaverContainer.getBoundingClientRect().height,
       };
     }
 
-    runAnimation(element: HTMLElement): void {
+    private runAnimation(element: HTMLElement): void {
       element.style.position = 'absolute';
 
       let positionY = this.windowDimensions.width / 2;
@@ -71,7 +74,9 @@ class ScreenSvr {
         element.style.top = positionY + 'px';
         element.style.left = positionX + 'px';
 
-        requestAnimationFrame(animateElements)
+        if (this.playAnimation) {
+          requestAnimationFrame(animateElements);
+        }
       }
       requestAnimationFrame(animateElements)
     }
@@ -98,6 +103,14 @@ class ScreenSvr {
       screenSaverText.classList.add('screensaver__content');
 
       return screenSaverText
+    }
+
+    private stopScreensaver() {
+      window.addEventListener('keydown', (e) => {
+        e.preventDefault();
+        this.playAnimation = false;
+        this.screensaverElement.remove();
+      })
     }
 
 }
