@@ -1,4 +1,4 @@
-import { BaseConfig } from "./models";
+import { BaseConfig, IDimensions } from "./models";
 import './index.css';
 
 const baseConfig: BaseConfig = {
@@ -18,6 +18,7 @@ const speedOptions = {
 
 class ScreenSvr {
     private config = baseConfig;
+    private windowDimensions: IDimensions = { width: 0, height: 0}
 
     constructor() { }
 
@@ -28,39 +29,42 @@ class ScreenSvr {
 
     private createContainer(): void {
         const screenSaverContainer = document.createElement('div');
-
         screenSaverContainer.classList.add('screensaver__bg');
-
         this.config.baseElement?.appendChild(screenSaverContainer);
+        this.getWindowDimensions();
+
         screenSaverContainer.style.backgroundColor = <string>this.config.background;
 
         const screenSaverElement = this.getScreensaverElement() as HTMLElement;
-        console.log('element', screenSaverElement)
         screenSaverContainer.appendChild(screenSaverElement);
 
         this.runAnimation(screenSaverElement);
     }
 
-    runAnimation(element: HTMLElement): void {
-      element.style.position = 'absolute';
+    private getWindowDimensions(): void {
       const screensaverBg = <HTMLElement>document.querySelector(".screensaver__bg");
-      const dimensions = {
+      this.windowDimensions = {
         width: screensaverBg.getBoundingClientRect().width,
         height: screensaverBg.getBoundingClientRect().height,
       };
-      let positionY = dimensions.width / 2;
-      let positionX = dimensions.height / 2;
-      let movementX = this.config.animationSpeed ? speedOptions[this.config.animationSpeed] : 3;
-      let movementY = this.config.animationSpeed ? speedOptions[this.config.animationSpeed] : 3;
+    }
+
+    runAnimation(element: HTMLElement): void {
+      element.style.position = 'absolute';
+
+      let positionY = this.windowDimensions.width / 2;
+      let positionX = this.windowDimensions.height / 2;
+      let movementX = this.config.animationSpeed ? speedOptions[this.config.animationSpeed] : speedOptions.regular;
+      let movementY = this.config.animationSpeed ? speedOptions[this.config.animationSpeed] : speedOptions.regular;
 
       const animateElements = () => {
         positionY += movementY
         positionX += movementX
 
-        if (positionY < 0 || positionY >= dimensions.height - element.offsetHeight) {
+        if (positionY < 0 || positionY >= this.windowDimensions.height - element.offsetHeight) {
           movementY = -movementY;
         }
-        if (positionX <= 0 || positionX >= dimensions.width - element.clientWidth) {
+        if (positionX <= 0 || positionX >= this.windowDimensions.width - element.clientWidth) {
           movementX = -movementX;
         }
 
