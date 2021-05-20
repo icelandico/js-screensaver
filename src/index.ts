@@ -28,9 +28,7 @@ class ScreenSvr {
 
     start(config?: BaseConfig): void {
         this.config = { ...baseConfig, ...config };
-        this.noActionListener();
-        // this.createContainer();
-        // this.stopScreensaver();
+        this.setActionsListeners();
     }
 
     private createContainer(): void {
@@ -111,19 +109,14 @@ class ScreenSvr {
     }
 
     private stopScreensaverListener() {
-      window.addEventListener('keydown', (e) => {
+      this.eventsList.forEach(event => window.addEventListener(event, (e) => {
         e.preventDefault();
         this.playAnimation = false;
         this.screensaverElement.remove();
-      })
-      window.addEventListener('mousemove', (e) => {
-        e.preventDefault();
-        this.playAnimation = false;
-        this.screensaverElement.remove();
-      })
+      }));
     }
 
-    private noActionListener() {
+    private setActionsListeners() {
       let mouseMoveTimer: ReturnType<typeof setTimeout>;
       this.eventsList.forEach(event => window.addEventListener(event, () => {
         clearTimeout(mouseMoveTimer);
