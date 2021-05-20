@@ -8,6 +8,7 @@ const baseConfig: BaseConfig = {
     textSize: 34,
     baseElement: document.body,
     animationSpeed: 'regular',
+    triggerTime: 5000,
 }
 
 const speedOptions = {
@@ -21,13 +22,15 @@ class ScreenSvr {
     private windowDimensions: IDimensions = { width: 0, height: 0};
     private playAnimation: boolean = true;
     private screensaverElement: HTMLElement = document.body;
+    private eventsList: string[] = ['keydown', 'mousemove'];
 
     constructor() { }
 
     start(config?: BaseConfig): void {
         this.config = { ...baseConfig, ...config };
-        this.createContainer();
-        this.stopScreensaver();
+        this.noActionListener();
+        // this.createContainer();
+        // this.stopScreensaver();
     }
 
     private createContainer(): void {
@@ -42,6 +45,7 @@ class ScreenSvr {
         screenSaverContainer.appendChild(screenSaverElement);
         this.screensaverElement = screenSaverContainer;
         this.runAnimation(screenSaverElement);
+        this.playAnimation && this.stopScreensaverListener();
     }
 
     private getWindowDimensions(): void {
@@ -53,6 +57,7 @@ class ScreenSvr {
     }
 
     private runAnimation(element: HTMLElement): void {
+      this.playAnimation = true;
       element.style.position = 'absolute';
 
       let positionY = this.windowDimensions.width / 2;
@@ -105,12 +110,27 @@ class ScreenSvr {
       return screenSaverText
     }
 
-    private stopScreensaver() {
+    private stopScreensaverListener() {
       window.addEventListener('keydown', (e) => {
         e.preventDefault();
         this.playAnimation = false;
         this.screensaverElement.remove();
       })
+      window.addEventListener('mousemove', (e) => {
+        e.preventDefault();
+        this.playAnimation = false;
+        this.screensaverElement.remove();
+      })
+    }
+
+    private noActionListener() {
+      let mouseMoveTimer: ReturnType<typeof setTimeout>;
+      this.eventsList.forEach(event => window.addEventListener(event, () => {
+        clearTimeout(mouseMoveTimer);
+        mouseMoveTimer = setTimeout(() => {
+          this.createContainer();
+        }, this.config.triggerTime)
+      }))
     }
 
 }
