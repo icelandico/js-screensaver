@@ -8,7 +8,7 @@ const baseConfig: BaseConfig = {
     textSize: 34,
     baseElement: document.body,
     animationSpeed: 'regular',
-    triggerTime: 5000,
+    triggerTime: 2000,
 }
 
 const speedOptions = {
@@ -18,8 +18,8 @@ const speedOptions = {
 }
 
 class ScreenSvr {
-    private config = baseConfig;
-    private windowDimensions: IDimensions = { width: 0, height: 0};
+    private config: BaseConfig = baseConfig;
+    private windowDimensions: IDimensions = { width: 0, height: 0 };
     private playAnimation: boolean = true;
     private screensaverElement: HTMLElement = document.body;
     private eventsList: string[] = ['keydown', 'mousemove'];
@@ -58,8 +58,9 @@ class ScreenSvr {
       this.playAnimation = true;
       element.style.position = 'absolute';
 
-      let positionY = this.windowDimensions.width / 2;
-      let positionX = this.windowDimensions.height / 2;
+      let positionX = this.windowDimensions.width / 2;
+      let positionY = this.windowDimensions.height / 2;
+      console.log('positions', positionY, positionX)
       let movementX = this.config.animationSpeed ? speedOptions[this.config.animationSpeed] : speedOptions.regular;
       let movementY = this.config.animationSpeed ? speedOptions[this.config.animationSpeed] : speedOptions.regular;
 
