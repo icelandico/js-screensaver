@@ -33,12 +33,18 @@ class ScreenSvr {
     screenSaverContainer.style.backgroundColor = <string>this.config.background;
 
     const screenSaverElement = this.getScreensaverElement() as HTMLElement;
+    console.log('element', screenSaverElement)
     screenSaverContainer.appendChild(screenSaverElement);
-    document.querySelector('.screensaver__element-text')!.innerHTML += this.config.text
+    this.insertCustomText();
 
     this.screensaverElement = screenSaverContainer;
     this.runAnimation(screenSaverElement);
     this.playAnimation && this.stopScreensaverListener();
+  }
+
+  private insertCustomText() {
+    const screensaverText = document.querySelector('.screensaver__element-text');
+    screensaverText ? screensaverText.innerHTML += this.config.text : null;
   }
 
   private getWindowDimensions(): void {
@@ -91,12 +97,13 @@ class ScreenSvr {
     if (!this.config.customElement) {
       return this.createElementFromText(this.defaultScreensaver)
     }
-    return screensaverWrapper.appendChild(
+    screensaverWrapper.appendChild(
       typeof this.config.customElement === 'string' ?
         this.createElementFromText(this.config.customElement)
         :
         this.config.customElement
     )
+    return screensaverWrapper
   }
 
   createScreensaverWrapper(): Element {
