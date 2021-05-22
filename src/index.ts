@@ -1,21 +1,6 @@
 import { BaseConfig, IDimensions } from "./models";
+import { baseConfig, speedOptions } from "./baseConfig";
 import './index.css';
-
-const baseConfig: BaseConfig = {
-    text: 'ScreenSaver',
-    background: '#2c3e50',
-    textColor: '#dbdbdb',
-    textSize: 34,
-    baseElement: document.body,
-    animationSpeed: 'regular',
-    triggerTime: 2000,
-}
-
-const speedOptions = {
-  slow: 1,
-  regular: 3,
-  fast: 5,
-}
 
 class ScreenSvr {
     private config: BaseConfig = baseConfig;
@@ -23,6 +8,11 @@ class ScreenSvr {
     private playAnimation: boolean = true;
     private screensaverElement: HTMLElement = document.body;
     private eventsList: string[] = ['keydown', 'mousemove'];
+    private defaultScreensaver: string = `
+      <div class="screensaver__default">
+          <p>Default, boring screensaver</p>
+      </div>
+      `
 
     constructor() { }
 
@@ -60,7 +50,6 @@ class ScreenSvr {
 
       let positionX = this.windowDimensions.width / 2;
       let positionY = this.windowDimensions.height / 2;
-      console.log('positions', positionY, positionX)
       let movementX = this.config.animationSpeed ? speedOptions[this.config.animationSpeed] : speedOptions.regular;
       let movementY = this.config.animationSpeed ? speedOptions[this.config.animationSpeed] : speedOptions.regular;
 
@@ -93,10 +82,18 @@ class ScreenSvr {
     }
 
     getScreensaverElement() {
-      if (!this.config.customHTML) {
-        return this.createScreensaverBaseElement();
+      const screensaverWrapper = this.createScreensaverWrapper();
+      if (!this.config.customElement) {
+        return screensaverWrapper.appendChild(this.createScreensaverBaseElement());
       }
-      return typeof this.config.customHTML === 'string' ? this.createElementFromText(this.config.customHTML) :  this.config.customHTML
+      return typeof this.config.customElement === 'string' ? this.createElementFromText(this.config.customElement) :  this.config.customElement
+    }
+
+    createScreensaverWrapper(): Element {
+      const wrapper = document.createElement('div');
+      wrapper.classList.add('screensaver__element-wrapper');
+      wrapper.id = 'screensaver-element'
+      return wrapper;
     }
 
     createScreensaverBaseElement(): Element {

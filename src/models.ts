@@ -6,7 +6,7 @@ export interface BaseConfig {
   baseElement?: HTMLElement | Element
   backgroundImg?: string
   animationSpeed?: 'slow' | 'regular' | 'fast'
-  customHTML?: Element | string,
+  customElement?: HTMLElement | Element | string,
   triggerTime?: number,
 }
 

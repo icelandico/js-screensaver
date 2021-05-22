@@ -4,6 +4,7 @@
   bottom: 0;
   right: 0;
   left: 0;
+  transition: all 1s;
 }
 
 .screensaver__content {
@@ -12,4 +13,23 @@
   left: 0;
   margin: 0;
   white-space: nowrap;
+}
+
+.screensaver__default {
+  margin: 0;
+  padding: 15px;
+  width: 20%;
+  border: 1px solid peru;
+  background-color: #E3E3D8;
+  border-radius: 5px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+  color: #232323;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.screensaver__wrapper {
+  display: block;
+  height: auto;
+  width: auto;
 }
