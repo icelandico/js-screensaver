@@ -1,130 +1,130 @@
-import { BaseConfig, IDimensions } from "./models";
-import { baseConfig, speedOptions } from "./baseConfig";
+import {BaseConfig, IDimensions} from "./models";
+import {baseConfig, speedOptions} from "./baseConfig";
 import './index.css';
 
 class ScreenSvr {
-    private config: BaseConfig = baseConfig;
-    private windowDimensions: IDimensions = { width: 0, height: 0 };
-    private playAnimation: boolean = true;
-    private screensaverElement: HTMLElement = document.body;
-    private eventsList: string[] = ['keydown', 'mousemove'];
-    private defaultScreensaver: string = `
-      <div class="screensaver__default">
-          <p>Default, boring screensaver</p>
+  private config: BaseConfig = baseConfig;
+  private windowDimensions: IDimensions = {width : 0, height : 0};
+  private playAnimation: boolean = true;
+  private screensaverElement: HTMLElement = document.body;
+  private eventsList: string[] = ['keydown', 'mousemove'];
+  private defaultScreensaver: string = `
+    <div class="screensaver__element-wrapper">
+      <div class="screensaver__element-content">
+        <p class="screensaver__element-text"></p>
       </div>
-      `
+    </div>
+  `
 
-    constructor() { }
+  constructor() {
+  }
 
-    start(config?: BaseConfig): void {
-        this.config = { ...baseConfig, ...config };
-        this.setActionsListeners();
-    }
+  start(config?: BaseConfig): void {
+    this.config = {...baseConfig, ...config};
+    this.setActionsListeners();
+  }
 
-    private createContainer(): void {
-        const screenSaverContainer = document.createElement('div');
-        screenSaverContainer.classList.add('screensaver__container');
-        this.config.baseElement?.appendChild(screenSaverContainer);
-        this.getWindowDimensions();
+  private createContainer(): void {
+    const screenSaverContainer = document.createElement('div');
+    screenSaverContainer.classList.add('screensaver__container');
+    this.config.baseElement?.appendChild(screenSaverContainer);
+    this.getWindowDimensions();
 
-        screenSaverContainer.style.backgroundColor = <string>this.config.background;
+    screenSaverContainer.style.backgroundColor = <string>this.config.background;
 
-        const screenSaverElement = this.getScreensaverElement() as HTMLElement;
-        screenSaverContainer.appendChild(screenSaverElement);
-        this.screensaverElement = screenSaverContainer;
-        this.runAnimation(screenSaverElement);
-        this.playAnimation && this.stopScreensaverListener();
-    }
+    const screenSaverElement = this.getScreensaverElement() as HTMLElement;
+    screenSaverContainer.appendChild(screenSaverElement);
+    document.querySelector('.screensaver__element-text')!.innerHTML += this.config.text
 
-    private getWindowDimensions(): void {
-      const screensaverContainer = <HTMLElement>document.querySelector(".screensaver__container");
-      this.windowDimensions = {
-        width: screensaverContainer.getBoundingClientRect().width,
-        height: screensaverContainer.getBoundingClientRect().height,
-      };
-    }
+    this.screensaverElement = screenSaverContainer;
+    this.runAnimation(screenSaverElement);
+    this.playAnimation && this.stopScreensaverListener();
+  }
 
-    private runAnimation(element: HTMLElement): void {
-      this.playAnimation = true;
-      element.style.position = 'absolute';
+  private getWindowDimensions(): void {
+    const screensaverContainer = <HTMLElement>document.querySelector(".screensaver__container");
+    this.windowDimensions = {
+      width : screensaverContainer.getBoundingClientRect().width,
+      height : screensaverContainer.getBoundingClientRect().height,
+    };
+  }
 
-      let positionX = this.windowDimensions.width / 2;
-      let positionY = this.windowDimensions.height / 2;
-      let movementX = this.config.animationSpeed ? speedOptions[this.config.animationSpeed] : speedOptions.regular;
-      let movementY = this.config.animationSpeed ? speedOptions[this.config.animationSpeed] : speedOptions.regular;
+  private runAnimation(element: HTMLElement): void {
+    this.playAnimation = true;
+    element.style.position = 'absolute';
 
-      const animateElements = () => {
-        positionY += movementY
-        positionX += movementX
+    let positionX = this.windowDimensions.width / 2;
+    let positionY = this.windowDimensions.height / 2;
+    let movementX = this.config.animationSpeed ? speedOptions[this.config.animationSpeed] : speedOptions.regular;
+    let movementY = this.config.animationSpeed ? speedOptions[this.config.animationSpeed] : speedOptions.regular;
 
-        if (positionY < 0 || positionY >= this.windowDimensions.height - element.offsetHeight) {
-          movementY = -movementY;
-        }
-        if (positionX <= 0 || positionX >= this.windowDimensions.width - element.clientWidth) {
-          movementX = -movementX;
-        }
+    const animateElements = () => {
+      positionY += movementY
+      positionX += movementX
 
-        element.style.top = positionY + 'px';
-        element.style.left = positionX + 'px';
-
-        if (this.playAnimation) {
-          requestAnimationFrame(animateElements);
-        }
+      if (positionY < 0 || positionY >= this.windowDimensions.height - element.offsetHeight) {
+        movementY = -movementY;
       }
-      requestAnimationFrame(animateElements)
-    }
-
-    createElementFromText(stringHtml: string): HTMLElement {
-      const element = document.createElement('div');
-      element.innerHTML = stringHtml.trim();
-
-      return element.firstChild as HTMLElement
-    }
-
-    getScreensaverElement() {
-      const screensaverWrapper = this.createScreensaverWrapper();
-      if (!this.config.customElement) {
-        return screensaverWrapper.appendChild(this.createScreensaverBaseElement());
+      if (positionX <= 0 || positionX >= this.windowDimensions.width - element.clientWidth) {
+        movementX = -movementX;
       }
-      return typeof this.config.customElement === 'string' ? this.createElementFromText(this.config.customElement) :  this.config.customElement
-    }
 
-    createScreensaverWrapper(): Element {
-      const wrapper = document.createElement('div');
-      wrapper.classList.add('screensaver__element-wrapper');
-      wrapper.id = 'screensaver-element'
-      return wrapper;
-    }
+      element.style.top = positionY + 'px';
+      element.style.left = positionX + 'px';
 
-    createScreensaverBaseElement(): Element {
-      const screenSaverText = document.createElement('p');
-      screenSaverText.innerText = <string>this.config.text;
-      screenSaverText.style.color = <string>this.config.textColor;
-      screenSaverText.style.fontSize = `${this.config.textSize}px`;
-      screenSaverText.classList.add('screensaver__content');
-
-      return screenSaverText
+      if (this.playAnimation) {
+        requestAnimationFrame(animateElements);
+      }
     }
+    requestAnimationFrame(animateElements)
+  }
 
-    private stopScreensaverListener() {
-      this.eventsList.forEach(event => window.addEventListener(event, (e) => {
-        e.preventDefault();
-        this.playAnimation = false;
-        this.screensaverElement.remove();
-      }));
-    }
+  createElementFromText(stringHtml: string): HTMLElement {
+    const element = document.createElement('div');
+    element.innerHTML = stringHtml.trim();
 
-    private setActionsListeners() {
-      let mouseMoveTimer: ReturnType<typeof setTimeout>;
-      this.eventsList.forEach(event => window.addEventListener(event, () => {
-        clearTimeout(mouseMoveTimer);
-        mouseMoveTimer = setTimeout(() => {
-          this.createContainer();
-        }, this.config.triggerTime)
-      }))
+    return element.firstChild as HTMLElement
+  }
+
+  getScreensaverElement() {
+    const screensaverWrapper = this.createScreensaverWrapper();
+    if (!this.config.customElement) {
+      return this.createElementFromText(this.defaultScreensaver)
     }
+    return screensaverWrapper.appendChild(
+      typeof this.config.customElement === 'string' ?
+        this.createElementFromText(this.config.customElement)
+        :
+        this.config.customElement
+    )
+  }
+
+  createScreensaverWrapper(): Element {
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('screensaver__element-wrapper');
+    wrapper.id = 'screensaver-element'
+    return wrapper;
+  }
+
+  private stopScreensaverListener() {
+    this.eventsList.forEach(event => window.addEventListener(event, (e) => {
+      e.preventDefault();
+      this.playAnimation = false;
+      this.screensaverElement.remove();
+    }));
+  }
+
+  private setActionsListeners() {
+    let mouseMoveTimer: ReturnType<typeof setTimeout>;
+    this.eventsList.forEach(event => window.addEventListener(event, () => {
+      clearTimeout(mouseMoveTimer);
+      mouseMoveTimer = setTimeout(() => {
+        this.createContainer();
+      }, this.config.triggerTime)
+    }))
+  }
 
 }
 
 const classInstance = new ScreenSvr();
-export { classInstance as ScreenSvr };
+export {classInstance as ScreenSvr};

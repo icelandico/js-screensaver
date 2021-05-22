@@ -15,20 +15,18 @@
   white-space: nowrap;
 }
 
-.screensaver__default {
+.screensaver__element-content {
   margin: 0;
   padding: 15px;
-  width: 20%;
-  border: 1px solid peru;
   background-color: #E3E3D8;
   border-radius: 5px;
-  box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-  color: #232323;
-  font-size: 24px;
+  box-shadow: 0 0 10px rgba(189, 195, 199, 0.5);
+  color: #2c3e50;
+  font-size: 28px;
   font-weight: bold;
 }
 
-.screensaver__wrapper {
+.screensaver__element-wrapper {
   display: block;
   height: auto;
   width: auto;

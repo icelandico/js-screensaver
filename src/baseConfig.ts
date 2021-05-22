@@ -7,9 +7,8 @@ export const speedOptions = {
 }
 
 export const baseConfig: BaseConfig = {
+  text: 'Default, boring screensaver.',
   background: '#2c3e50',
-  textColor: '#dbdbdb',
-  textSize: 34,
   baseElement: document.body,
   animationSpeed: 'regular',
   triggerTime: 2000,
