@@ -31,3 +31,7 @@
   height: auto;
   width: auto;
 }
+
+.screensaver__element-wrapper > div {
+  display: block;
+}

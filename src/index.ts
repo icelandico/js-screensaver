@@ -16,8 +16,7 @@ class ScreenSvr {
     </div>
   `
 
-  constructor() {
-  }
+  constructor() { }
 
   start(config?: BaseConfig): void {
     this.config = {...baseConfig, ...config};
@@ -33,7 +32,6 @@ class ScreenSvr {
     screenSaverContainer.style.backgroundColor = <string>this.config.background;
 
     const screenSaverElement = this.getScreensaverElement() as HTMLElement;
-    console.log('element', screenSaverElement)
     screenSaverContainer.appendChild(screenSaverElement);
     this.insertCustomText();
 
