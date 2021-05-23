@@ -2,7 +2,7 @@ import {BaseConfig, IDimensions} from "./models";
 import {baseConfig, speedOptions} from "./baseConfig";
 import './index.css';
 
-class ScreenSvr {
+class JsScreensaver {
   private config: BaseConfig = baseConfig;
   private windowDimensions: IDimensions = {width : 0, height : 0};
   private playAnimation: boolean = true;
@@ -100,7 +100,7 @@ class ScreenSvr {
         this.createElementFromText(this.config.customElement)
         :
         this.config.customElement
-    )
+    );
     return screensaverWrapper
   }
 
@@ -131,5 +131,5 @@ class ScreenSvr {
 
 }
 
-const classInstance = new ScreenSvr();
-export {classInstance as ScreenSvr};
+const classInstance = new JsScreensaver();
+export { classInstance as JsScreensaver };
