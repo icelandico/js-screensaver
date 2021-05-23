@@ -5,11 +5,11 @@ Simple library to run screensaver on your website.
 Run screensaver without any configuration:
 
 ```javascript
-JsScreensaver.start();
+JsScreensaver.start({});
 ```
 
 This will run the predefined screensaver with basic message and styling.
-It's possible to extend the basic screensaver with the following options in the object.
+It's possible to extend the basic screensaver with the following options which have to be put in the object.
 
 - `text` - insert your message inside the default screensaver,
 - `background` - change the background color the default screensaver,
