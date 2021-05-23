@@ -1,22 +1,24 @@
 {
   "name": "js-screensaver",
+  "author": "Mike M.",
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "files": ["lib/"],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepublish": "tsc",
+    "prepublish": "tsc -p tsconfig.json",
     "clean": "rimraf dist/",
     "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.css lib/",
-    "build": "yarn clean && tsc && yarn copy-files"
+    "build": "yarn clean && tsc && yarn copy-files",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/icelandico/js-screensaver.git"
   },
   "keywords": [],
-  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/icelandico/js-screensaver/issues"
